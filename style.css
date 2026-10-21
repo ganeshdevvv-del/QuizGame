@@ -1,0 +1,27 @@
+#quiz-continer{
+    max-width: 400px;
+    margin:20px auto;
+    text-align: center;
+    border:2px solid #ddd;
+    padding:20px;
+    border-radius: 5px;
+    
+}
+.btn{
+    display:block;
+    width: 100%;
+    margin: 8px 0;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.correct{
+    background-color: #9aeabc;
+    
+}
+
+.incorrect{
+    background-color:rgb(250, 109, 109);
+    color: #fff;
+}
