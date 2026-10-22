@@ -1,3 +1,4 @@
+
 * {
     margin: 0;
     padding: 0;
@@ -68,29 +69,36 @@ body {
 }
 
 
+
 #nxt-btn {
     margin-top: 25px;
+    padding: 12px 25px;
     text-align: center;
     background-color: #2563eb;
     color: white;
     border: none;
+    border-radius: 6px;
     font-weight: bold;
+    cursor: pointer;
 }
+
+#answers .btn.selected {
+    background-color: #dbeafe;
+    border: 0.5px solid #3d3d3d;
+    color: #111214;
+} 
 
 #nxt-btn:hover:not(:disabled) {
     background-color: #1d4ed8;
 }
 
-#nxt-btn:disabled {
-    background-color: #a5b4fc;
-    cursor: not-allowed;
-}
+
 
 #results {
     width: 100%;
     max-width: 600px;
-    text-align: center;
     margin-top: 20px;
+    text-align: center;
 }
 
 #results h2 {
@@ -102,8 +110,47 @@ body {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
+#results h3 {
+    margin: 20px 0;
+    color: #222;
+    font-size: 22px;
+}
+
+.review-card {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    text-align: left;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.review-card h4 {
+    margin-bottom: 15px;
+    line-height: 1.5;
+    color: #222;
+    font-size: 17px;
+}
+
+.review-card p {
+    margin-top: 10px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.answer-correct {
+    color: #198754;
+    font-weight: bold;
+}
+
+.answer-incorrect {
+    color: #dc3545;
+    font-weight: bold;
+}
+
 .restart-btn {
     padding: 12px 25px;
+    margin: 15px 0;
     font-size: 16px;
     background-color: #16a34a;
     color: white;
@@ -114,4 +161,18 @@ body {
 
 .restart-btn:hover {
     background-color: #15803d;
+}
+
+@media (max-width: 480px) {
+    #quiz-continer {
+        padding: 20px;
+    }
+
+    #question {
+        font-size: 20px;
+    }
+
+    .review-card {
+        padding: 15px;
+    }
 }

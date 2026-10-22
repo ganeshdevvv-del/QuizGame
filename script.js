@@ -1,3 +1,4 @@
+
 const questions = [
     {
         question: "Which is used to declare a constant?",
@@ -6,10 +7,8 @@ const questions = [
             { text: "var", correct: false },
             { text: "const", correct: true },
             { text: "static", correct: false }
-        ],
-        explanation: "The const keyword declares a variable that cannot be reassigned."
+        ]
     },
-
     {
         question: "Which keyword is used to declare a variable that can be reassigned?",
         answer: [
@@ -17,10 +16,8 @@ const questions = [
             { text: "let", correct: true },
             { text: "static", correct: false },
             { text: "fixed", correct: false }
-        ],
-        explanation: "The let keyword declares a variable that can be reassigned."
+        ]
     },
-
     {
         question: "Which method displays a message in the browser console?",
         answer: [
@@ -28,10 +25,8 @@ const questions = [
             { text: "print()", correct: false },
             { text: "display()", correct: false },
             { text: "show()", correct: false }
-        ],
-        explanation: "console.log() displays messages in the browser console."
+        ]
     },
-
     {
         question: "Which symbol is used for a single-line comment in JavaScript?",
         answer: [
@@ -39,10 +34,8 @@ const questions = [
             { text: "//", correct: true },
             { text: "**", correct: false },
             { text: "##", correct: false }
-        ],
-        explanation: "Two forward slashes (//) create a single-line comment."
+        ]
     },
-
     {
         question: "Which method adds an element to the end of an array?",
         answer: [
@@ -50,10 +43,8 @@ const questions = [
             { text: "shift()", correct: false },
             { text: "push()", correct: true },
             { text: "unshift()", correct: false }
-        ],
-        explanation: "The push() method adds elements to the end of an array."
+        ]
     },
-
     {
         question: "Which operator compares both value and data type?",
         answer: [
@@ -61,8 +52,7 @@ const questions = [
             { text: "==", correct: false },
             { text: "===", correct: true },
             { text: "!=", correct: false }
-        ],
-        explanation: "The === operator compares both value and data type."
+        ]
     }
 ];
 
@@ -100,34 +90,30 @@ function showQuestion() {
 
         button.textContent = ans.text;
         button.classList.add("btn");
-        button.dataset.correct = ans.correct;
 
-        button.addEventListener("click", selectAnswer);
+        button.addEventListener("click", function () {
+            selectAnswer(button, ans);
+        });
 
         answersBtn.appendChild(button);
     });
 
-    if (currIndex === questions.length - 1) {
-        nextButton.textContent = "Show Results";
-    } else {
-        nextButton.textContent = "Next";
-    }
+    nextButton.textContent =
+        currIndex === questions.length - 1
+            ? "Show Results"
+            : "Next";
 
     nextButton.disabled = true;
 }
 
-function selectAnswer(e) {
-    const selectedButton = e.currentTarget;
-    const isCorrect = selectedButton.dataset.correct === "true";
+function selectAnswer(selectedButton, selectedAnswer) {
+    userAnswers[currIndex] = selectedAnswer.text;
 
-    userAnswers[currIndex] = selectedButton.textContent;
-
-    if (isCorrect) {
-        selectedButton.classList.add("correct");
+    if (selectedAnswer.correct) {
         score++;
-    } else {
-        selectedButton.classList.add("incorrect");
     }
+
+    selectedButton.classList.add("selected");
 
     Array.from(answersBtn.children).forEach(function (button) {
         button.disabled = true;
@@ -155,8 +141,56 @@ function showResults() {
     results.replaceChildren();
 
     const scoreTitle = document.createElement("h2");
-    scoreTitle.textContent = `Your Score: ${score} out of ${questions.length}`;
+    scoreTitle.textContent =
+        `Your Score: ${score} out of ${questions.length}`;
+
     results.appendChild(scoreTitle);
+
+    const reviewTitle = document.createElement("h3");
+    reviewTitle.textContent = "Answer Review";
+    results.appendChild(reviewTitle);
+
+    questions.forEach(function (question, index) {
+        const reviewCard = document.createElement("div");
+        reviewCard.classList.add("review-card");
+
+        const questionTitle = document.createElement("h4");
+        questionTitle.textContent =
+            `${index + 1}. ${question.question}`;
+
+        reviewCard.appendChild(questionTitle);
+
+        const selectedAnswer = userAnswers[index];
+
+        const yourAnswer = document.createElement("p");
+        yourAnswer.textContent =
+            `Your Answer: ${selectedAnswer ?? "Not answered"}`;
+
+        if (
+            question.answer.some(function (answer) {
+                return answer.text === selectedAnswer && answer.correct;
+            })
+        ) {
+            yourAnswer.classList.add("answer-correct");
+        } else {
+            yourAnswer.classList.add("answer-incorrect");
+        }
+
+        reviewCard.appendChild(yourAnswer);
+
+        const correctAnswer = question.answer.find(function (answer) {
+            return answer.correct;
+        });
+
+        const correctText = document.createElement("p");
+        correctText.textContent =
+            `Correct Answer: ${correctAnswer.text}`;
+        correctText.classList.add("answer-correct");
+
+        reviewCard.appendChild(correctText);
+
+        results.appendChild(reviewCard);
+    });
 
     const restartButton = document.createElement("button");
     restartButton.textContent = "Restart Quiz";
@@ -166,7 +200,5 @@ function showResults() {
 
     results.appendChild(restartButton);
 }
-
-
 
 startQuiz();
