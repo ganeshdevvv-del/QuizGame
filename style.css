@@ -1,27 +1,117 @@
-#quiz-continer{
-    max-width: 400px;
-    margin:20px auto;
-    text-align: center;
-    border:2px solid #ddd;
-    padding:20px;
-    border-radius: 5px;
-    
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
-.btn{
-    display:block;
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f4f8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+#quiz-continer {
+    background-color: white;
     width: 100%;
-    margin: 8px 0;
-    padding: 10px;
+    max-width: 600px;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+#question {
+    font-size: 24px;
+    color: #222;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+#answers {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 16px;
+    text-align: left;
+    background-color: white;
+    color: #222;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+#answers .btn:hover:not(:disabled) {
+    background-color: #e8f0fe;
+    border-color: #2563eb;
+}
+
+#answers .btn.correct {
+    background-color: #d4edda;
+    border-color: #28a745;
+    color: #155724;
+}
+
+#answers .btn.incorrect {
+    background-color: #f8d7da;
+    border-color: #dc3545;
+    color: #721c24;
+}
+
+
+#nxt-btn {
+    margin-top: 25px;
+    text-align: center;
+    background-color: #2563eb;
+    color: white;
     border: none;
+    font-weight: bold;
+}
+
+#nxt-btn:hover:not(:disabled) {
+    background-color: #1d4ed8;
+}
+
+#nxt-btn:disabled {
+    background-color: #a5b4fc;
+    cursor: not-allowed;
+}
+
+#results {
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+#results h2 {
+    background-color: white;
+    padding: 25px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    color: #222;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.restart-btn {
+    padding: 12px 25px;
+    font-size: 16px;
+    background-color: #16a34a;
+    color: white;
+    border: none;
+    border-radius: 6px;
     cursor: pointer;
 }
 
-.correct{
-    background-color: #9aeabc;
-    
-}
-
-.incorrect{
-    background-color:rgb(250, 109, 109);
-    color: #fff;
+.restart-btn:hover {
+    background-color: #15803d;
 }

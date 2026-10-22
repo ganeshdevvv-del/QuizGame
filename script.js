@@ -6,8 +6,10 @@ const questions = [
             { text: "var", correct: false },
             { text: "const", correct: true },
             { text: "static", correct: false }
-        ]
+        ],
+        explanation: "The const keyword declares a variable that cannot be reassigned."
     },
+
     {
         question: "Which keyword is used to declare a variable that can be reassigned?",
         answer: [
@@ -15,17 +17,21 @@ const questions = [
             { text: "let", correct: true },
             { text: "static", correct: false },
             { text: "fixed", correct: false }
-        ]
+        ],
+        explanation: "The let keyword declares a variable that can be reassigned."
     },
+
     {
-        question: "Which method is used to display a message in the browser console?",
+        question: "Which method displays a message in the browser console?",
         answer: [
             { text: "console.log()", correct: true },
             { text: "print()", correct: false },
             { text: "display()", correct: false },
             { text: "show()", correct: false }
-        ]
+        ],
+        explanation: "console.log() displays messages in the browser console."
     },
+
     {
         question: "Which symbol is used for a single-line comment in JavaScript?",
         answer: [
@@ -33,95 +39,134 @@ const questions = [
             { text: "//", correct: true },
             { text: "**", correct: false },
             { text: "##", correct: false }
-        ]
+        ],
+        explanation: "Two forward slashes (//) create a single-line comment."
     },
+
     {
-        question: "Which method is used to add an element to the end of an array?",
+        question: "Which method adds an element to the end of an array?",
         answer: [
             { text: "pop()", correct: false },
             { text: "shift()", correct: false },
             { text: "push()", correct: true },
             { text: "unshift()", correct: false }
-        ]
+        ],
+        explanation: "The push() method adds elements to the end of an array."
     },
+
     {
-        question: "Which operator is used to compare both value and data type?",
+        question: "Which operator compares both value and data type?",
         answer: [
             { text: "=", correct: false },
             { text: "==", correct: false },
             { text: "===", correct: true },
             { text: "!=", correct: false }
-        ]
+        ],
+        explanation: "The === operator compares both value and data type."
     }
 ];
-const questionElement =document.getElementById("question");
-const answersBtn =document.getElementById("answers");
-const nextButton =document.getElementById("nxt-btn");
 
-let currIndex =0;
-let score =0;
-nextButton.disabled =true;
+const quizContainer = document.getElementById("quiz-continer");
+const questionElement = document.getElementById("question");
+const answersBtn = document.getElementById("answers");
+const nextButton = document.getElementById("nxt-btn");
+const results = document.getElementById("results");
 
-function startQuiz(){
-    currIndex=0;
-    score=0;
-    console.log(nextButton);
-    nextButton.textContent ="Next";
+let currIndex = 0;
+let score = 0;
+let userAnswers = [];
+
+function startQuiz() {
+    currIndex = 0;
+    score = 0;
+    userAnswers = [];
+
+    quizContainer.style.display = "block";
+    results.replaceChildren();
+
     showQuestion();
 }
 
-function showQuestion(){
+function showQuestion() {
     const currentQuestion = questions[currIndex];
-    questionElement.textContent = currentQuestion.question;
-    currentQuestion.answer.forEach((ans)=>{
-        console.log(ans);
+
+    questionElement.textContent =
+        `${currIndex + 1}. ${currentQuestion.question}`;
+
+    answersBtn.replaceChildren();
+
+    currentQuestion.answer.forEach(function (ans) {
         const button = document.createElement("button");
+
         button.textContent = ans.text;
         button.classList.add("btn");
-        answersBtn.appendChild(button);
+        button.dataset.correct = ans.correct;
 
-        if(ans.correct === true){
-            button.dataset.correct = ans.correct;
-        }
-        button.addEventListener("click",selectAnswer)
-    })  
+        button.addEventListener("click", selectAnswer);
+
+        answersBtn.appendChild(button);
+    });
+
+    if (currIndex === questions.length - 1) {
+        nextButton.textContent = "Show Results";
+    } else {
+        nextButton.textContent = "Next";
+    }
+
+    nextButton.disabled = true;
 }
 
-function selectAnswer(e){
-    const selectbtn =e.target.dataset.correct==="true";
-    if(selectbtn){
+function selectAnswer(e) {
+    const selectedButton = e.currentTarget;
+    const isCorrect = selectedButton.dataset.correct === "true";
+
+    userAnswers[currIndex] = selectedButton.textContent;
+
+    if (isCorrect) {
+        selectedButton.classList.add("correct");
         score++;
+    } else {
+        selectedButton.classList.add("incorrect");
     }
-    Array.from(answersBtn.children).forEach(btn =>{
-        const isCorrect = btn.dataset.correct;
-        if(isCorrect){
-            btn.classList.add("correct");
-        }
-        else{
-            btn.classList.add("incorrect");
-            btn.disabled = true;
-        }
-    })
+
+    Array.from(answersBtn.children).forEach(function (button) {
+        button.disabled = true;
+    });
+
     nextButton.disabled = false;
 }
 
-nextButton.addEventListener("click",()=>{
-    currIndex++;
-    reset();
-    if(currIndex < questions.length){
-        showQuestion();
+nextButton.addEventListener("click", function () {
+    if (nextButton.disabled) {
+        return;
     }
-    else{
-        reset();
-        questionElement.textContent=`Score : ${score} out of ${questions.length}`
-    }
-})
 
-function reset(){
-    nextButton.disabled = true;
-    while(answersBtn.firstChild){
-        answersBtn.removeChild(answersBtn.firstChild);
+    currIndex++;
+
+    if (currIndex < questions.length) {
+        showQuestion();
+    } else {
+        showResults();
     }
+});
+
+function showResults() {
+    quizContainer.style.display = "none";
+    results.replaceChildren();
+
+    const scoreTitle = document.createElement("h2");
+    scoreTitle.textContent = `Your Score: ${score} out of ${questions.length}`;
+    results.appendChild(scoreTitle);
+
+    const restartButton = document.createElement("button");
+    restartButton.textContent = "Restart Quiz";
+    restartButton.classList.add("restart-btn");
+
+    restartButton.addEventListener("click", startQuiz);
+
+    results.appendChild(restartButton);
 }
+
+
 
 startQuiz();
