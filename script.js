@@ -61,6 +61,9 @@ const questionElement = document.getElementById("question");
 const answersBtn = document.getElementById("answers");
 const nextButton = document.getElementById("nxt-btn");
 const results = document.getElementById("results");
+const alertMessage = document.getElementById("alert-message");
+const progressBar = document.getElementById("progress-bar");
+const progressText = document.getElementById("progress-text");
 
 let currIndex = 0;
 let score = 0;
@@ -84,6 +87,7 @@ function showQuestion() {
         `${currIndex + 1}. ${currentQuestion.question}`;
 
     answersBtn.replaceChildren();
+    alertMessage.textContent = "";
 
     currentQuestion.answer.forEach(function (ans) {
         const button = document.createElement("button");
@@ -98,6 +102,12 @@ function showQuestion() {
         answersBtn.appendChild(button);
     });
 
+    progressBar.style.width =
+        `${(currIndex / questions.length) * 100}%`;
+
+    progressText.textContent =
+        `Question ${currIndex + 1} of ${questions.length}`;
+
     nextButton.textContent =
         currIndex === questions.length - 1
             ? "Show Results"
@@ -107,6 +117,10 @@ function showQuestion() {
 }
 
 function selectAnswer(selectedButton, selectedAnswer) {
+    if (userAnswers[currIndex] !== undefined) {
+        return;
+    }
+
     userAnswers[currIndex] = selectedAnswer.text;
 
     if (selectedAnswer.correct) {
@@ -119,11 +133,16 @@ function selectAnswer(selectedButton, selectedAnswer) {
         button.disabled = true;
     });
 
+    alertMessage.textContent = "";
     nextButton.disabled = false;
+
+    progressBar.style.width =
+        `${((currIndex + 1) / questions.length) * 100}%`;
 }
 
 nextButton.addEventListener("click", function () {
-    if (nextButton.disabled) {
+    if (userAnswers[currIndex] === undefined) {
+        alertMessage.textContent = "Please select an option!";
         return;
     }
 
@@ -148,6 +167,7 @@ function showResults() {
 
     const reviewTitle = document.createElement("h3");
     reviewTitle.textContent = "Answer Review";
+
     results.appendChild(reviewTitle);
 
     questions.forEach(function (question, index) {
@@ -162,37 +182,41 @@ function showResults() {
 
         const selectedAnswer = userAnswers[index];
 
-        const yourAnswer = document.createElement("p");
-        yourAnswer.textContent =
-            `Your Answer: ${selectedAnswer ?? "Not answered"}`;
-
-        if (
-            question.answer.some(function (answer) {
-                return answer.text === selectedAnswer && answer.correct;
-            })
-        ) {
-            yourAnswer.classList.add("answer-correct");
-        } else {
-            yourAnswer.classList.add("answer-incorrect");
-        }
-
-        reviewCard.appendChild(yourAnswer);
-
         const correctAnswer = question.answer.find(function (answer) {
             return answer.correct;
         });
 
-        const correctText = document.createElement("p");
-        correctText.textContent =
-            `Correct Answer: ${correctAnswer.text}`;
-        correctText.classList.add("answer-correct");
+        const isCorrect = question.answer.some(function (answer) {
+            return answer.text === selectedAnswer && answer.correct;
+        });
 
-        reviewCard.appendChild(correctText);
+        const yourAnswer = document.createElement("p");
+
+        yourAnswer.textContent =
+            `Your Answer: ${selectedAnswer}`;
+
+        if (isCorrect) {
+            yourAnswer.classList.add("answer-correct");
+            reviewCard.appendChild(yourAnswer);
+        } else {
+            yourAnswer.classList.add("answer-incorrect");
+            reviewCard.appendChild(yourAnswer);
+
+            const correctText = document.createElement("p");
+
+            correctText.textContent =
+                `Correct Answer: ${correctAnswer.text}`;
+
+            correctText.classList.add("answer-correct");
+
+            reviewCard.appendChild(correctText);
+        }
 
         results.appendChild(reviewCard);
     });
 
     const restartButton = document.createElement("button");
+
     restartButton.textContent = "Restart Quiz";
     restartButton.classList.add("restart-btn");
 
